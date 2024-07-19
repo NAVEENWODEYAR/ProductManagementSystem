@@ -33,15 +33,22 @@ public class ProductController {
 	public ResponseEntity<?> test(){
 		log.warn("TestEndpoint accessed,");
 		return ResponseEntity.status(HttpStatus.FOUND)
-							 .header("TestEndpoint", "Welcome!")
+							 .header("TestEndpoint", "application/json")
 							 .body("Welcome to Product Service,");
 	}
 	
 	@PostMapping
 	public void createProduct(@RequestBody ProductRequest request) {
-		log.info("Product {} crated successfully",request.getPName());
+		log.info("Product {} crated successfully",request.getpName());
 		productService.createProduct(request);
 	}
+	
+	@PostMapping("/add")
+    public void createProducts(@RequestBody ProductRequest request) {
+        log.info("Product {} created successfully", request.getpName());
+        productService.createProduct(request);
+    }
+	
 	
 	@GetMapping
 	public List<ProductResponse> getProducts(){

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pms.dto.OrderLineItemsDto;
 import com.pms.dto.OrderRequest;
@@ -18,6 +19,7 @@ import com.pms.repository.OrderRepository;
  * @date 19-Jul-2024
  */
 @Service
+@Transactional
 public class OrderService {
 	
 	@Autowired

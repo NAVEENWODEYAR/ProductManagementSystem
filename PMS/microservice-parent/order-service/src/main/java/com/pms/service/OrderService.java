@@ -2,13 +2,14 @@ package com.pms.service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import com.pms.dto.InventoryResponse;
+import com.pms.event.OrderPlacedEvent;
 import io.micrometer.tracing.Tracer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,8 @@ public class OrderService {
 	private WebClient.Builder webClientBuilder;
 
     private final Tracer tracer;
+
+	private final KafkaTemplate<String,OrderPlacedEvent> kafkaTemplate;
 
 	public String  placeOrder(OrderRequest request) {
 		Order order = new Order();
@@ -68,6 +71,7 @@ public class OrderService {
 
             if (allProductsInStock){
                 orderRepository.save(order);
+				kafkaTemplate.send("notificationTopic",new OrderPlacedEvent(order.getONumber()));
                 return "Order placed ";
             }else {
                 throw new IllegalArgumentException("Product out of stock, Please try again!,");

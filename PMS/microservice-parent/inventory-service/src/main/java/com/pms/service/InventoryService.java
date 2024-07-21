@@ -28,7 +28,7 @@ public class InventoryService {
 	public List<InventoryResponse> isInStock(List<String> skuCode) {
 		log.debug("Checking the stock,");
 		log.info("Waiting for");
-		Thread.sleep(10000);
+//		Thread.sleep(10000);
 		log.info("Ready for");
 		 return inventoryRepository.findBySkuCodeIn(skuCode)
 				 .stream()

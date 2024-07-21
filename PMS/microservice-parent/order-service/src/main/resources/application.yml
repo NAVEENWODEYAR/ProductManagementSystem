@@ -61,3 +61,18 @@ resilience4j:
   sleuth:
     sampler:
       probability: 1.0
+
+##Kafka properties,
+  kafka:
+    bootstrap:
+      bootstrap-servers: localhost:9092
+    template:
+      default-topic: notificationTopic
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.JsonSerializer
+      properties:
+        spring:
+          json:
+            type:
+              mapping: event:com.pms.event.OrderPlacedEvent

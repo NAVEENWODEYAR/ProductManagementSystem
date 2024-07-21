@@ -14,9 +14,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+      dialect: org.hibernate.dialect.MySQLDialect
 
 eureka:
   client:
@@ -56,3 +54,10 @@ resilience4j:
       inventory:
         max-attempts: 3
         wait-duration: 5s
+
+# Zipkin properties
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      probability: 1.0

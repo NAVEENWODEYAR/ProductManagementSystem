@@ -1,6 +1,7 @@
 package com.pms.service;
 
 import com.pms.dto.InventoryResponse;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +22,14 @@ public class InventoryService {
 
 	@Autowired
 	private InventoryRepository inventoryRepository;
-	
+
+	@SneakyThrows
 	@Transactional(readOnly = true)
 	public List<InventoryResponse> isInStock(List<String> skuCode) {
 		log.debug("Checking the stock,");
+		log.info("Waiting for");
+		Thread.sleep(10000);
+		log.info("Ready for");
 		 return inventoryRepository.findBySkuCodeIn(skuCode)
 				 .stream()
 				 .map(inventory ->

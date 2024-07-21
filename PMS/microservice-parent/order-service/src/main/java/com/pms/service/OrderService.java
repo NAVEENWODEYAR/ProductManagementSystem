@@ -32,7 +32,7 @@ public class OrderService {
 	@Autowired
 	private WebClient.Builder webClientBuilder;
 
-	public void placeOrder(OrderRequest request) {
+	public String  placeOrder(OrderRequest request) {
 		Order order = new Order();
 
 		List<OrderLineItems> orderLineItems = request.getOrderLineItemsDtoList()
@@ -57,14 +57,14 @@ public class OrderService {
 
 		boolean allProductsInStock = Arrays.stream(result)
 				.allMatch(InventoryResponse::isInStock);
-
+		log.info("Placing order");
 
 		if (allProductsInStock){
 			orderRepository.save(order);
+			return "Order placed ";
 		}else {
 			throw new IllegalArgumentException("Product out of stock, Please try again!,");
 		}
-		log.info("Placing order");
     }
 	
 	

@@ -1,5 +1,8 @@
 package com.pms.controller;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import com.pms.dto.OrderRequest;
 import com.pms.service.OrderService;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Naveen K Wodeyar
@@ -37,10 +42,15 @@ public class OrderController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public String placeOrder(@RequestBody OrderRequest request) {
-		orderService.placeOrder(request);
+	@CircuitBreaker(name = "inventory",fallbackMethod = "fallbackMethod")
+	@TimeLimiter(name = "inventory")
+	@Retry(name = "inventory")
+	public CompletableFuture<String> placeOrder(@RequestBody OrderRequest request) {
 		log.warn("Order {} placed successfully",request.getOrderLineItemsDtoList().get(0).getOltId());
-		return "Order placed successfully,";
+		return CompletableFuture.supplyAsync(()->orderService.placeOrder(request) );
 	}
 
+	public CompletableFuture<String> fallbackMethod(OrderRequest request,RuntimeException runtimeException){
+		return CompletableFuture.supplyAsync(()->"Internal application error, Please try after sometime!, ");
+	}
 }

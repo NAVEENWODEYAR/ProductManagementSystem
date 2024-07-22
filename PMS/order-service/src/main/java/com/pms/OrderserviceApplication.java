@@ -1,0 +1,15 @@
+package com.pms;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+public class OrderserviceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OrderserviceApplication.class, args);
+		System.out.println("ordeR\nservicE");
+	}
+}
